@@ -1,0 +1,33 @@
+import spotipy
+
+token = "token"
+
+sp = spotipy.Spotify(auth=token)
+
+# PLAYLIST TRACK FINDER
+def search_for_tracks(playlist_id):
+    results = sp.playlist_tracks(playlist_id=playlist_id, limit=20)
+    for track in results['items']:
+        print("Name:", track['track']['name'])
+        print("Artist:", track['track']['artists'][0]['name'])
+        duration = (track['track']['duration_ms'] / 60000 % 60)
+        duration = f"{int(duration):02d}:{int(duration * 60) % 60:02d}"
+        print("Duration:", duration)
+        print("Popularity:", track['track']['popularity'])
+        print("Album art:", track['track']['album']['images'][0]['url'])
+        get_track_analysis(track['track']['id'])
+
+# SONG ANALYSIS DATA
+key_names = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+
+def get_track_analysis(track_id):
+    analysis = sp.audio_analysis(track_id)
+    key = key_names[analysis['track']['key']]
+    if analysis['track']['mode'] == 0:
+        key = key + "m"
+    print("Key:", key)
+    print("Tempo:", int(analysis['track']['tempo']))
+    print("Loudness:", analysis['track']['loudness'])
+    print("\n..............................................................................\n")
+
+search_for_tracks("<playlist_id>") # write playlist id
