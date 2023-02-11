@@ -1,0 +1,32 @@
+import spotipy
+token = "TOKEN"
+
+sp = spotipy.Spotify(auth=token)
+
+# ARTIST TRACK FINDER
+def search_for_tracks(artist_name):
+    results = sp.search(q=f"artist:{artist_name}", type='track', limit=15) #number of elements
+    for track in results['tracks']['items']:
+        print("Name:", track['name'])
+        print("Artist:", track['artists'][0]['name'])
+        duration = (track['duration_ms'] / 60000 % 60)
+        duration = f"{int(duration):02d}:{int(duration * 60) % 60:02d}"
+        print("Duration:", duration)
+        print("Popularity:", track['popularity'])
+        print("Album art:", track['album']['images'][0]['url'])
+        get_track_analysis(track['id'])
+
+# SONG ANALYSIS DATA
+key_names = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+
+def get_track_analysis(track_id):
+    analysis = sp.audio_analysis(track_id)
+    key = key_names[analysis['track']['key']]
+    if analysis['track']['mode'] == 0:
+        key = key + "m"
+    print("Key:", key)
+    print("Tempo:", int(analysis['track']['tempo']))
+    print("Loudness:", analysis['track']['loudness'])
+    print("\n..............................................................................\n")
+
+search_for_tracks("Dua Lipa") # write artist name
