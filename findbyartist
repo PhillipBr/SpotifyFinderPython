@@ -29,4 +29,7 @@ def get_track_analysis(track_id):
     print("Loudness:", analysis['track']['loudness'])
     print("\n..............................................................................\n")
 
-search_for_tracks("Dua Lipa") # write artist name
+
+
+artist_name = input("Write artist name: ") # user write artist name here here
+search_for_tracks(artist_name)
